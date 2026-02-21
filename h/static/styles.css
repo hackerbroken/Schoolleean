@@ -1,0 +1,434 @@
+/* Base Theme */
+:root {
+    --bg: #edf3f0;
+    --surface: #ffffff;
+    --surface-soft: #f7faf8;
+    --text: #182223;
+    --text-muted: #566368;
+    --primary: #0e9f6e;
+    --primary-dark: #087d56;
+    --border: #d8e3de;
+    --shadow: 0 12px 32px rgba(18, 46, 40, 0.08);
+    --radius-md: 12px;
+    --radius-lg: 18px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+body {
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 0% 0%, rgba(14, 159, 110, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 100% 10%, rgba(5, 150, 105, 0.08) 0%, transparent 32%),
+        var(--bg);
+}
+
+h1, h2, h3, .logo {
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.container {
+    width: min(1120px, 100% - 2rem);
+    margin: 0 auto;
+}
+
+/* Header */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(9, 40, 32, 0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header-inner {
+    min-height: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    color: #ecfff8;
+    text-decoration: none;
+    font-size: 1.55rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.main-nav {
+    min-width: 0;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-left: 0;
+}
+
+.nav-link {
+    color: #d7efe7;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 999px;
+    transition: 0.2s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 10px 18px;
+    background: var(--primary);
+    color: #f7fffb;
+    box-shadow: 0 10px 18px rgba(14, 159, 110, 0.22);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    background: var(--primary-dark);
+    box-shadow: 0 12px 22px rgba(8, 125, 86, 0.28);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid rgba(231, 255, 247, 0.7);
+    color: #ecfff8;
+    box-shadow: none;
+    padding: 8px 14px;
+}
+
+.btn-outline:hover {
+    background: #ecfff8;
+    color: #0d3d2d;
+}
+
+/* Hero */
+.hero {
+    margin-top: 20px;
+    border-radius: var(--radius-lg);
+    padding: 92px 24px;
+    text-align: center;
+    color: #f2fff9;
+    background:
+        linear-gradient(140deg, rgba(9, 73, 51, 0.92), rgba(14, 159, 110, 0.86)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 24 24'%3E%3Cpath fill='rgba(255,255,255,0.07)' d='M12 2l7 4v12l-7 4l-7-4V6z'/%3E%3C/svg%3E");
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h2 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    margin-bottom: 14px;
+}
+
+.hero p {
+    max-width: 720px;
+    margin: 0 auto 26px auto;
+    font-size: clamp(1rem, 2.2vw, 1.18rem);
+    color: rgba(245, 255, 252, 0.92);
+}
+
+/* Generic sections */
+.subjects {
+    margin-top: 36px;
+    margin-bottom: 48px;
+}
+
+.subjects h2 {
+    text-align: center;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    margin-bottom: 28px;
+}
+
+.subject-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.subject {
+    background: linear-gradient(160deg, #ffffff, var(--surface-soft));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subject:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(18, 46, 40, 0.12);
+}
+
+.subject h3 {
+    font-size: 1.28rem;
+    margin-bottom: 10px;
+    color: #113127;
+}
+
+.subject p {
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    min-height: 48px;
+}
+
+.question-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 14px 0 16px 0;
+}
+
+.question-stats span {
+    font-size: 0.83rem;
+    color: #2d4f44;
+    font-weight: 700;
+    background: #eef7f3;
+    border: 1px solid #d5e7df;
+    border-radius: 8px;
+    padding: 8px 6px;
+}
+
+.subject .btn {
+    width: 100%;
+    min-height: 44px;
+}
+
+.quiz-progress {
+    margin-top: 10px;
+}
+
+/* Support sections used by older templates */
+.user-details {
+    padding: 40px 0;
+    background: transparent;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px 22px;
+}
+
+.avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.info h3 {
+    color: #0f6e4d;
+}
+
+.info p {
+    color: var(--text-muted);
+}
+
+.flash-messages {
+    width: min(1120px, 100% - 2rem);
+    margin: 16px auto 0 auto;
+}
+
+.flash {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #c8dfd4;
+    background: #effaf5;
+    color: #1a513e;
+}
+
+main.container {
+    padding-top: 14px;
+}
+
+footer {
+    margin-top: 28px;
+    background: #0f2e24;
+    color: #d7efe7;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+footer .container {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-inner {
+        min-height: 64px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .logo {
+        font-size: 1.45rem;
+        margin: 0 auto;
+        text-align: center;
+        display: block;
+    }
+
+    .main-nav {
+        width: 100%;
+    }
+
+    .nav-list {
+        width: 100%;
+        justify-content: center;
+        row-gap: 8px;
+    }
+
+    .nav-link {
+        min-height: 40px;
+        padding: 8px 12px;
+    }
+
+    .hero {
+        margin-top: 12px;
+        padding: 64px 16px;
+    }
+
+    .subject-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .avatar {
+        margin-right: 0;
+        margin-bottom: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: min(1120px, 100% - 1rem);
+    }
+
+    .logo {
+        font-size: 1.25rem;
+    }
+
+    .nav-list {
+        gap: 6px;
+    }
+
+    .nav-link {
+        font-size: 0.86rem;
+        padding: 7px 10px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .hero {
+        border-radius: 14px;
+        padding: 50px 12px;
+    }
+
+    .hero h2 {
+        font-size: 1.72rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+
+    .subjects {
+        margin-top: 24px;
+        margin-bottom: 30px;
+    }
+
+    .subject {
+        padding: 18px 14px;
+    }
+
+    .question-stats {
+        grid-template-columns: 1fr;
+    }
+
+    footer .container {
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        width: min(1120px, 100% - 1.5rem);
+    }
+
+    .hero {
+        padding: 78px 22px;
+    }
+
+    .subject-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1280px) {
+    .header-inner {
+        min-height: 78px;
+    }
+
+    .hero {
+        padding: 104px 28px;
+    }
+
+    .subject-grid {
+        gap: 22px;
+    }
+}

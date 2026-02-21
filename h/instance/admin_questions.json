@@ -1,0 +1,31 @@
+{
+  "custom": {
+    "computer": [],
+    "math": [
+      {
+        "_qid": "custom-f31612a26b",
+        "question": "2 + 4 = ?",
+        "options": [
+          "5",
+          "4",
+          "7",
+          "6"
+        ],
+        "answer": 3,
+        "explanation": ""
+      }
+    ],
+    "science": [],
+    "english": [],
+    "gujarati": [],
+    "social-science": []
+  },
+  "deleted_base": {
+    "computer": [],
+    "math": [],
+    "science": [],
+    "english": [],
+    "gujarati": [],
+    "social-science": []
+  }
+}

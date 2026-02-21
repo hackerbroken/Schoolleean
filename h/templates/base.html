@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <title>{% block title %}SchoolLearn{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="{{ url_for('home') }}" class="logo">SchoolLearn</a>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+                    <li><a class="nav-link" href="{{ url_for('home') }}#subjects">Subjects</a></li>
+                    {% if current_user.is_authenticated %}
+                        {% if show_admin_panel and current_user.is_admin %}
+                            <li><a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-lock"></i></a></li>
+                        {% endif %}
+                        <li><a class="nav-link" href="/profile">Profile</a></li>
+                        <li><a class="nav-link" href="/logout">Logout</a></li>
+                    {% else %}
+                        <li><a class="nav-link" href="{{ url_for('student_login') }}">Student Login</a></li>
+                        {% if show_admin_panel %}
+                        <li><a class="nav-link" href="{{ url_for('admin_login') }}">Admin Login</a></li>
+                        {% endif %}
+                        <li><a href="/register" class="btn btn-outline">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="container">
+        {% block content %}
+        <!-- Child templates will insert content here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; {{ now.year }} SchoolLearn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

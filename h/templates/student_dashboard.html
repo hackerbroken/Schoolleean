@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - SchoolLearn{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dash-wrap { padding: 18px 0 32px 0; }
+    .dash-hero {
+        background: linear-gradient(145deg, #0f3c2f, #0e9f6e);
+        color: #ecfff8;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        margin-bottom: 14px;
+    }
+    .dash-hero h1 { margin-bottom: 6px; }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: var(--shadow);
+    }
+    .stat-label { color: #55736a; font-size: 0.86rem; font-weight: 700; }
+    .stat-value { color: #0f6f4d; font-size: 1.55rem; font-weight: 800; margin-top: 3px; }
+    .panel {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: var(--shadow);
+        margin-bottom: 14px;
+    }
+    .panel h2 { color: #173f32; margin-bottom: 10px; }
+    .subject-row { margin-bottom: 10px; }
+    .subject-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 0.9rem;
+        color: #2f4f46;
+        margin-bottom: 5px;
+        font-weight: 700;
+    }
+    .track {
+        height: 10px;
+        background: #e5efea;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+    .fill {
+        height: 100%;
+        background: linear-gradient(90deg, #0e9f6e, #26c281);
+        width: 0%;
+    }
+    .attempt-list { list-style: none; margin: 0; padding: 0; }
+    .attempt-item {
+        padding: 9px 0;
+        border-bottom: 1px solid #eef4f1;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+    }
+    .attempt-item:last-child { border-bottom: 0; }
+    .attempt-subject { font-weight: 700; color: #245645; }
+    .attempt-meta { color: #6f8580; font-size: 0.84rem; }
+    .attempt-score {
+        background: #e8f6ef;
+        color: #1d5b45;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        white-space: nowrap;
+    }
+    .chart-wrap {
+        position: relative;
+        width: 100%;
+        min-height: 280px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="dash-wrap">
+    <div class="dash-hero">
+        <h1>{{ current_user.username }}'s Analysis Dashboard</h1>
+        <p>{{ current_user.email }}{% if current_user.grade %} | {{ current_user.grade }}{% endif %}{% if current_user.school %} | {{ current_user.school }}{% endif %}</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Quizzes Taken</div>
+            <div class="stat-value">{{ analytics.total_quizzes }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Average Score</div>
+            <div class="stat-value">{{ analytics.avg_score }}%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Questions Answered</div>
+            <div class="stat-value">{{ analytics.total_questions }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Overall Accuracy</div>
+            <div class="stat-value">{{ analytics.overall_accuracy }}%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Uploaded Results</div>
+            <div class="stat-value">{{ result_analytics.total_records }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Result Average</div>
+            <div class="stat-value">{{ result_analytics.average_percentage }}%</div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Subject Performance</h2>
+        {% for subject in analytics.subject_performance %}
+        <div class="subject-row">
+            <div class="subject-head">
+                <span>{{ subject.subject }} ({{ subject.attempts }} attempts)</span>
+                <span>Avg {{ subject.average }}% | Best {{ subject.best }}%</span>
+            </div>
+            <div class="track">
+                <div class="fill" style="width: {{ subject.average }}%;"></div>
+            </div>
+        </div>
+        {% else %}
+        <p>No quiz data yet. Complete your first quiz to see analytics.</p>
+        {% endfor %}
+    </div>
+
+    <div class="panel">
+        <h2>Performance Charts</h2>
+        <div class="chart-wrap">
+            <canvas id="subjectBarChart"></canvas>
+        </div>
+        <div class="chart-wrap" style="margin-top: 14px;">
+            <canvas id="attemptTrendChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Uploaded Results Dashboard</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Best Result</div>
+                <div class="stat-value">{{ result_analytics.best_percentage }}%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Marks</div>
+                <div class="stat-value">{{ result_analytics.total_scored }}/{{ result_analytics.total_possible }}</div>
+            </div>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="resultSubjectChart"></canvas>
+        </div>
+        <div class="chart-wrap" style="margin-top: 14px;">
+            <canvas id="resultTrendChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Recent Attempts</h2>
+        <ul class="attempt-list">
+            {% for attempt in analytics.recent_attempts %}
+            <li class="attempt-item">
+                <div>
+                    <div class="attempt-subject">{{ attempt.subject_title }}</div>
+                    <div class="attempt-meta">{{ attempt.attempted_at_display }}</div>
+                </div>
+                <div class="attempt-score">{{ attempt.score }}/{{ attempt.total_questions }} ({{ attempt.percentage }}%)</div>
+            </li>
+            {% else %}
+            <li class="attempt-item"><span>No attempts yet.</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const subjectData = {{ analytics.subject_performance|tojson }};
+    const recentAttempts = {{ analytics.recent_attempts|tojson }};
+    const resultSubjectData = {{ result_analytics.subject_summary|tojson }};
+    const resultRecentData = {{ result_analytics.recent_results|tojson }};
+
+    const subjectLabels = subjectData.map(item => item.subject);
+    const subjectAverages = subjectData.map(item => item.average);
+    const subjectBest = subjectData.map(item => item.best);
+
+    const subjectCtx = document.getElementById('subjectBarChart');
+    if (subjectCtx) {
+        new Chart(subjectCtx, {
+            type: 'bar',
+            data: {
+                labels: subjectLabels,
+                datasets: [
+                    {
+                        label: 'Average %',
+                        data: subjectAverages,
+                        backgroundColor: 'rgba(14, 159, 110, 0.75)',
+                        borderColor: 'rgba(14, 159, 110, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Best %',
+                        data: subjectBest,
+                        backgroundColor: 'rgba(38, 194, 129, 0.35)',
+                        borderColor: 'rgba(38, 194, 129, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+
+    const trendLabels = recentAttempts.slice().reverse().map((item, idx) => `Attempt ${idx + 1}`);
+    const trendScores = recentAttempts.slice().reverse().map(item => item.percentage);
+    const trendCtx = document.getElementById('attemptTrendChart');
+    if (trendCtx) {
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Recent Score %',
+                    data: trendScores,
+                    borderColor: 'rgba(15, 111, 77, 1)',
+                    backgroundColor: 'rgba(15, 111, 77, 0.18)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+
+    const resultSubjectCtx = document.getElementById('resultSubjectChart');
+    if (resultSubjectCtx) {
+        new Chart(resultSubjectCtx, {
+            type: 'bar',
+            data: {
+                labels: resultSubjectData.map(item => item.subject),
+                datasets: [{
+                    label: 'Result Average %',
+                    data: resultSubjectData.map(item => item.average_percentage),
+                    backgroundColor: 'rgba(38, 194, 129, 0.7)',
+                    borderColor: 'rgba(38, 194, 129, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+
+    const resultTrendCtx = document.getElementById('resultTrendChart');
+    if (resultTrendCtx) {
+        const orderedResults = resultRecentData.slice().reverse();
+        new Chart(resultTrendCtx, {
+            type: 'line',
+            data: {
+                labels: orderedResults.map((item, idx) => `${item.exam_name || 'Exam'} ${idx + 1}`),
+                datasets: [{
+                    label: 'Uploaded Result %',
+                    data: orderedResults.map(item => item.percentage),
+                    borderColor: 'rgba(11, 123, 87, 1)',
+                    backgroundColor: 'rgba(11, 123, 87, 0.16)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
